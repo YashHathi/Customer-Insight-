@@ -134,12 +134,20 @@ st.divider()
 
 # Trend Chart
 
+sentiment_filter = st.selectbox(
+    "Trend Sentiment",
+    ["All"] + sorted(df["sentiment"].unique())
+)
 
+trend_df = base_df.copy()
 
-
+if sentiment_filter != "All":
+    trend_df = trend_df[
+        trend_df["sentiment"] == sentiment_filter
+    ]
 
 trend = (
-    base_df
+    trend_df
     .groupby(
         [
             base_df["date"].dt.date,
@@ -156,7 +164,7 @@ fig = px.line(
     y="Count",
     color="label",
     markers=True,
-    title="Customer Issue Trends"
+    title="Customer Issue Trends Over Time"
 )
 
 st.plotly_chart(
