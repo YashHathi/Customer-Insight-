@@ -65,13 +65,8 @@ filtered_df = base_df.copy()
 
 if intent != "All":
     filtered_df = filtered_df[
-        filtered_df["label"] == intent
-    ]
+        filtered_df["label"] == intent]
 
-if sentiment != "All":
-    filtered_df = filtered_df[
-        filtered_df["sentiment"] == sentiment
-    ]
 
 
 left, right = st.columns(2)
