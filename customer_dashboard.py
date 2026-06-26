@@ -92,17 +92,16 @@ st.subheader("Sample Comments")
 samples = filtered_df.sample(min(5, len(filtered_df)), random_state=107)
 for _, row in samples.iterrows():
 
-    with st.container():
+    with st.container(border=True):
 
-        st.markdown(
-            f"""
-> {row['raw_text']}
+        st.markdown(f"**Customer Comment**")
 
-**Sentiment:** {row['sentiment']}
+        st.write(row["raw_text"])
 
-**Emotion:** {row['emotion']}
-"""
-        )
+        col1, col2 = st.columns(2)
+
+        col1.metric("Sentiment", row["sentiment"].title())
+        col2.metric("Emotion", row["emotion"].title())
 
 st.subheader("Recommendation")
 recommendation = filtered_df["recommendation"].iloc[0]
