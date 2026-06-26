@@ -34,22 +34,34 @@ col4.metric(
 st.divider()
 
 # Filter Button 
+
+df["date"] = pd.to_datetime(df["timestamp"])
+
+min_date = df["date"].min().date()
+max_date = df["date"].max().date()
+
+start_date, end_date = st.sidebar.slider(
+    "Date Range",
+    min_value=min_date,
+    max_value=max_date,
+    value=(min_date, max_date)
+)
+
+
+
+base_df = df[
+    (df["date"].dt.date >= start_date) &
+    (df["date"].dt.date <= end_date)
+]
+
 intent = st.sidebar.selectbox(
     "Select Intent", 
-    ["All"] + sorted(df["label"].unique())
+    ["All"] + sorted(base_df["label"].unique())
 )
-
-
-sentiment = st.sidebar.selectbox(
-    "Select Sentiment", 
-    ["All"] + sorted(df["sentiment"].unique())
-)
-
-
 
 
 # Filtering Data Frame
-filtered_df = df.copy()
+filtered_df = base_df.copy()
 
 if intent != "All":
     filtered_df = filtered_df[
@@ -127,22 +139,9 @@ st.divider()
 
 # Trend Chart
 
-filtered_df["date"] = pd.to_datetime(filtered_df["timestamp"])
 
-min_date = filtered_df["date"].min().date()
-max_date = filtered_df["date"].max().date()
 
-start_date, end_date = st.sidebar.slider(
-    "Date Range",
-    min_value=min_date,
-    max_value=max_date,
-    value=(min_date, max_date)
-)
 
-base_df = filtered_df[
-    (filtered_df["date"].dt.date >= start_date) &
-    (filtered_df["date"].dt.date <= end_date)
-]
 
 trend = (
     base_df
