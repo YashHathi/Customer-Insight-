@@ -68,7 +68,7 @@ left.metric(
 
 left.metric(
     "% Negativity",
-    round((filtered_df[filtered_df.sentiment == "negative"]).mean() * 100,2)
+    round((len(filtered_df[filtered_df.sentiment == "negative"]) / len(filtered_df)) * 100,2)
 )
 
 right.metric(
