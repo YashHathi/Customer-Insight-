@@ -31,6 +31,8 @@ col4.metric(
     df["emotion"].nunique()
 )
 
+st.divider()
+
 # Filter Button 
 intent = st.sidebar.selectbox(
     "Select Intent", 
@@ -83,6 +85,8 @@ right.metric(
     else "🟡 Medium"
 )
 
+st.divider()
+
 #Issue Explorer
 st.subheader("Sample Comments")
 samples = filtered_df.sample(min(5, len(filtered_df)), random_state=107)
@@ -103,6 +107,8 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 recommendation = filtered_df["recommendation"].iloc[0]
 st.success(recommendation)
+
+st.divider()
 
 # Charts
 
