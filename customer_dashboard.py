@@ -139,7 +139,7 @@ sentiment_filter = st.selectbox(
     ["All"] + sorted(df["sentiment"].unique())
 )
 
-trend_df = base_df.copy()
+trend_df = filtered_df.copy()
 
 if sentiment_filter != "All":
     trend_df = trend_df[
@@ -150,7 +150,7 @@ trend = (
     trend_df
     .groupby(
         [
-            base_df["date"].dt.date,
+            filtered_df["date"].dt.date,
             "label"
         ]
     )
