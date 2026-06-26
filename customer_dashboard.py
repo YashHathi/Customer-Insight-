@@ -62,7 +62,7 @@ if sentiment != "All":
 
 left, right = st.columns(2)
 left.metric(
-    "Comments"
+    "Comments",
     len(filtered_df)
 )
 
