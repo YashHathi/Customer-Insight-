@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib as plt
 import plotly.express as px
 
 # Data
@@ -8,6 +9,27 @@ df = pd.read_csv("Customer_insight.csv")
 # Title
 st.title("Customer Insight Engine")
 st.write("Time:", pd.to_datetime("today"))
+
+# KPI Cards
+col1,col2,col3,col4 = st.columns(4)
+col1.metric(
+    "# Feedback", 
+     len(df))
+
+col2.metric(
+    "% Negativity",
+    round((len(df[df.sentiment == "negative"]) / len(df)) * 100,2)
+)
+
+col3.metric(
+    "Feedback Intents",
+    df["label"].nunique()
+)
+
+col4.metric(
+    "Emotions",
+    df["emotion"].nunique()
+)
 
 # Filter Button 
 intent = st.sidebar.selectbox(
@@ -37,27 +59,50 @@ if sentiment != "All":
         filtered_df["sentiment"] == sentiment
     ]
 
-# KPI Cards
-col1,col2,col3,col4 = st.columns(4)
-col1.metric(
-    "# Feedback", 
-     len(df))
 
-col2.metric(
+left, right = st.columns(2)
+left.metric(
+    "Comments"
+    len(filtered_df)
+)
+
+left.metric(
     "% Negativity",
-    round((len(df[df.sentiment == "negative"]) / len(df)) * 100,2)
+    round((filtered_df[filtered_df.sentiment == "negative"]).mean() * 100,2)
 )
 
-col3.metric(
-    "Feedback Intents",
-    df["label"].nunique()
+right.metric(
+    "Primary Emotion",
+    filtered_df["emotion"].mode()[0]
 )
 
-col4.metric(
-    "Emotions",
-    df["emotion"].nunique()
+right.metric(
+    "Priority",
+    "🔴 High"
+    if (filtered_df["sentiment"]=="negative").mean() > .80
+    else "🟡 Medium"
 )
 
+#Issue Explorer
+st.subheader("Sample Comments")
+samples = filtered_df["raw_text"].sample(min(5, len(filtered_df)), random_state=107)
+for _, row in samples.iterrows():
+
+    with st.container():
+
+        st.markdown(
+            f"""
+> {row['raw_text']}
+
+**Sentiment:** {row['sentiment']}
+
+**Emotion:** {row['emotion']}
+"""
+        )
+
+st.subheader("Recommendation")
+recommendation = filtered_df["recommendation"].iloc[0]
+st.success(recommendation)
 
 # Charts
 
@@ -120,13 +165,3 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# Issue Explorer
-st.subheader("Sample Comments")
-if "raw_text" in filtered_df.columns:
-    samples = filtered_df["raw_text"].sample(min(5, len(filtered_df)), random_state=107)
-    for c in samples:
-        st.write(".", c)
-
-st.subheader("Recommendation")
-recommendation = filtered_df["recommendation"].iloc[0]
-st.info(recommendation)
