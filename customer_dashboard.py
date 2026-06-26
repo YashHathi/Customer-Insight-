@@ -85,7 +85,7 @@ right.metric(
 
 #Issue Explorer
 st.subheader("Sample Comments")
-samples = filtered_df["raw_text"].sample(min(5, len(filtered_df)), random_state=107)
+samples = filtered_df.sample(min(5, len(filtered_df)), random_state=107)
 for _, row in samples.iterrows():
 
     with st.container():
