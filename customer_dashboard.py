@@ -154,17 +154,16 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 sentiment_level = filtered_df["sentiment"].mode()[0]
 
-row = df[
-    (df["label"] == issue) &
-    (df["sentiment"] == sentiment_level)
-]
+issue_rows = df[df["label"] == issue]
 
-if not row.empty:
-    recommendation = row["recommendation"].iloc[0]
+if issue_rows.empty:
+    recommendation = "No recommendation available for this issue."
 else:
-    recommendation = df[
-        df["label"] == issue
-    ]["recommendation"].mode().iloc[0]
+    exact_match = issue_rows[issue_rows["sentiment"] == sentiment_level]
+    if not exact_match.empty:
+        recommendation = exact_match["recommendation"].iloc[0]
+    else:
+        recommendation = issue_rows["recommendation"].mode().iloc[0]
 st.success(recommendation)
 
 st.divider()
