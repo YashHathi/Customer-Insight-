@@ -103,12 +103,15 @@ trend_score = min(max(growth, 0), 1)
 risk = (0.4 * trend_score) + (0.4 * negative_rate) + (0.2 * emotion_value)
 if risk >= 0.75:
     status = "🔴 Critical"
+    recommendation = filtered_df[filtered_df.sentiment == "negative"].iloc[0]
 
 elif risk >= 0.50:
     status = "🟡 Monitor"
+    recommendation = filtered_df[filtered_df.sentiment == "neutral"].iloc[0]
 
 else:
     status = "🟢 Stable"
+    recommendation = filtered_df[filtered_df.sentiment == "positive"].iloc[0]
 
 
 left, right = st.columns(2)
