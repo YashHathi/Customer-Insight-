@@ -98,7 +98,7 @@ emotion_value = emotion_score.get(
 )
 
 # Get risk score
-negative_rate = filtered_df[filtered_df["sentiment"] == "negative"].mean()
+negative_rate = len(filtered_df[filtered_df["sentiment"] == "negative"]) / len(filtered_df)
 trend_score = min(max(growth, 0), 1)
 risk = (0.4 * trend_score) + (0.4 * negative_rate) + (0.2 * emotion_value)
 if risk >= 0.75:
