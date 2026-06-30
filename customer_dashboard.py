@@ -54,16 +54,16 @@ base_df = df[
     (df["date"].dt.date <= end_date)
 ]
 
-intent = st.sidebar.selectbox(
-    "Select Intent", 
+issue = st.sidebar.selectbox(
+    "Select Issue", 
     ["All"] + sorted(base_df["label"].unique())
 )
 
 # Filtering Data Frame
 filtered_df = base_df.copy()
-if intent != "All":
+if issue != "All":
     filtered_df = filtered_df[
-        filtered_df["label"] == intent]
+        filtered_df["label"] == issue]
 
 # For the date slider
 latest_date = filtered_df["date"].max()
@@ -103,15 +103,12 @@ trend_score = min(max(growth, 0), 1)
 risk = (0.4 * trend_score) + (0.4 * negative_rate) + (0.2 * emotion_value)
 if risk >= 0.75:
     status = "🔴 Critical"
-    recommendation = filtered_df[filtered_df.sentiment == "negative"].iloc[0]
 
 elif risk >= 0.50:
     status = "🟡 Monitor"
-    recommendation = filtered_df[filtered_df.sentiment == "neutral"].iloc[0]
 
 else:
     status = "🟢 Stable"
-    recommendation = filtered_df[filtered_df.sentiment == "positive"].iloc[0]
 
 
 left, right = st.columns(2)
@@ -153,8 +150,15 @@ for _, row in samples.iterrows():
         col1.metric("Sentiment", row["sentiment"].title())
         col2.metric("Emotion", row["emotion"].title())
 
+# Final Recommendation
 st.subheader("Recommendation")
-recommendation = filtered_df["recommendation"].iloc[0]
+sentiment_level = filtered_df["sentiment"].mode()[0]
+match = df[
+    (df["label"] == issue) &
+    (df["sentiment"] == sentiment_level)
+]
+
+recommendation = match["recommendation"].iloc[0]
 st.success(recommendation)
 
 st.divider()
