@@ -161,9 +161,9 @@ if issue_rows.empty:
 else:
     exact_match = issue_rows[issue_rows["sentiment"] == sentiment_level]
     if not exact_match.empty:
-        recommendation = exact_match["recommendation_x"].iloc[0]
+        recommendation = exact_match["recommendation"].iloc[0]
     else:
-        recommendation = issue_rows["recommendation_x"].mode().iloc[0]
+        recommendation = issue_rows["recommendation"].mode().iloc[0]
 st.success(recommendation)
 
 st.divider()
