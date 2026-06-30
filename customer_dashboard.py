@@ -11,27 +11,27 @@ st.title("Customer Insight Engine")
 st.write("Time:", pd.to_datetime("today"))
 
 # KPI Cards
-col1,col2,col3,col4 = st.columns(4)
-col1.metric(
-    "# Feedback", 
-     len(df))
+# col1,col2,col3,col4 = st.columns(4)
+# col1.metric(
+#     "# Feedback", 
+#      len(df))
 
-col2.metric(
-    "% Negativity",
-    round((len(df[df.sentiment == "negative"]) / len(df)) * 100,2)
-)
+# col2.metric(
+#     "% Negativity",
+#     round((len(df[df.sentiment == "negative"]) / len(df)) * 100,2)
+# )
 
-col3.metric(
-    "Feedback Intents",
-    df["label"].nunique()
-)
+# col3.metric(
+#     "Feedback Intents",
+#     df["label"].nunique()
+# )
 
-col4.metric(
-    "Emotions",
-    df["emotion"].nunique()
-)
+# col4.metric(
+#     "Emotions",
+#     df["emotion"].nunique()
+# )
 
-st.divider()
+# st.divider()
 
 # Filter Button 
 
