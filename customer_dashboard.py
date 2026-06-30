@@ -157,8 +157,10 @@ match = df[
     (df["label"] == issue) &
     (df["sentiment"] == sentiment_level)
 ]
-
-recommendation = match["recommendation"].iloc[0]
+if len(match) > 0:
+    recommendation = match["recommendation"].iloc[0]
+else:
+    recommendation = df[df["label"] == issue]["recommendation"].iloc[0]
 st.success(recommendation)
 
 st.divider()
