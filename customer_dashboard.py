@@ -59,14 +59,56 @@ intent = st.sidebar.selectbox(
     ["All"] + sorted(base_df["label"].unique())
 )
 
-
 # Filtering Data Frame
 filtered_df = base_df.copy()
-
 if intent != "All":
     filtered_df = filtered_df[
         filtered_df["label"] == intent]
 
+# For the date slider
+latest_date = filtered_df["date"].max()
+current = filtered_df[
+    filtered_df["date"] >= latest_date - pd.Timedelta(days=6)
+]
+
+previous = filtered_df[
+    (filtered_df["date"] >= latest_date - pd.Timedelta(days=13)) &
+    (filtered_df["date"] < latest_date - pd.Timedelta(days=6))
+]
+
+# Compute Complaint Growth
+current_count = len(current)
+previous_count = len(previous)
+growth = (current_count - previous_count) / max(previous_count,1)
+
+# Convert Emotion into Scores
+emotion_score = {
+    "joy":0.1,
+    "neutral":0.5,
+    "surprise":0.3,
+    "sadness":0.7,
+    "fear":0.9,
+    "anger":1.0,
+    "frustration":1.0
+}
+emotion = filtered_df["emotion"].mode()[0]
+emotion_value = emotion_score.get(
+    emotion.lower(),
+    0.5
+)
+
+# Get risk score
+negative_rate = filtered_df[filtered_df["sentiment"] == "negative"].mean()
+trend_score = min(max(growth, 0), 1)
+risk = (0.4 * trend_score) + (0.4 * negative_rate) + (0.2 * emotion_value)
+if risk >= 0.75:
+    status = "🔴 Critical"
+
+elif risk >= 0.50:
+    status = "🟡 Monitor"
+
+else:
+    status = "🟢 Stable"
 
 
 left, right = st.columns(2)
@@ -77,7 +119,7 @@ left.metric(
 
 left.metric(
     "% Negativity",
-    round((len(filtered_df[filtered_df.sentiment == "negative"]) / len(filtered_df)) * 100,2)
+    round(negative_rate * 100,2)
 )
 
 right.metric(
@@ -86,10 +128,8 @@ right.metric(
 )
 
 right.metric(
-    "Priority",
-    "🔴 High"
-    if (filtered_df["sentiment"]=="negative").mean() > .80
-    else "🟡 Medium"
+    "Emerging Risk",
+    status
 )
 
 st.divider()
