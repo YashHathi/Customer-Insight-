@@ -172,13 +172,13 @@ st.divider()
 
 
 sentiment_counts = df.groupby(["label", "sentiment"]).size().reset_index(name = "Count")
-chart2 = px.bar(sentiment_counts, x = "label", y = "Count", color = "sentiment", barmode="stack")
+chart2 = px.bar(sentiment_counts, x = "label", y = "Count", color = "sentiment", barmode="stack", title = "Sentiment Distribution by Issue")
 st.plotly_chart(chart2)
 
 # Priority Matrix
 
 priority = df.groupby("label").agg(volume = ("label", "size"), negativity = ("sentiment", lambda x: (x == "negative").mean())).reset_index()
-chart3 = px.scatter(priority, x = "volume", y = "negativity", size = "volume", text = "label")
+chart3 = px.scatter(priority, x = "volume", y = "negativity", size = "volume", text = "label", title = "Priority Matrix: Volume vs Negativity")
 chart3.update_traces(textposition = "top center")
 st.plotly_chart(chart3)
 
