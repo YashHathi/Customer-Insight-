@@ -172,7 +172,7 @@ st.divider()
 
 # Feedback Distribution channels
 feedback_counts = df.groupby(["label", "channel"]).size().reset_index(name = "Count")
-chart1 = px.bar(feedback_counts, x = "label", y = "Count", color = "channel", barmode="stack", title = "Feedback Distribution by Channel")
+chart1 = px.bar(feedback_counts, x = "label", y = "Count", color = "channel", barmode="stack", title = "Feedback Distribution by Issue and Channel")
 st.plotly_chart(chart1)
 
 
