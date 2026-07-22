@@ -61,7 +61,7 @@ Return only a valid JSON object in the following format:
     return prompt
 
 def call_llm(prompt):
-    client = OpenAI(api_key="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")
+    client = OpenAI()
 
     response = client.responses.create(
     model="gpt-5.4-nano",
