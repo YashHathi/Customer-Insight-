@@ -1,4 +1,5 @@
 import pandas as pd
+load dotenv import load_dotenv
 from openai import OpenAI
 import re
 import json
@@ -60,7 +61,7 @@ Return only a valid JSON object in the following format:
 """
 
     return prompt
-
+load_dotenv()
 client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
 
 def call_llm(prompt):
