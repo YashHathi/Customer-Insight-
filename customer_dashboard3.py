@@ -2,16 +2,42 @@ import streamlit as st
 import pandas as pd
 import matplotlib as plt
 import plotly.express as px
-
-# Data
-st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
-df = pd.read_csv("Customer_insight.csv")
+from pipeline import run_pipeline
 
 # Title
 st.title("Customer Insight Engine")
 st.write("Time:", pd.to_datetime("today"))
 
-# KPI Cards
+# File Uploader Button
+st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
+
+# This will give a file path for streamlit to read, as we are not hard coding for a specific file
+import tempfile
+if uploaded_file:
+
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=uploaded_file.name
+    ) as temp:
+
+        temp.write(uploaded_file.getvalue())
+
+        file_path = temp.name
+
+df = pd.read_csv(file_path)
+
+# We will make a run analysis button which can allow for proper personalization
+if st.button("Run Analysis"):
+    with st.spinner("Running analysis..."):
+        df, insights_df = run_pipeline(file_path)
+        st.session_state["df"] = df
+        st.session_state["insights_df"] = insights_df
+
+if "df" in st.session_state:
+        st.session_state["df"] = df
+        st.session_state["insights_df"] = insights_df
+
+# # KPI Cards
 # col1,col2,col3,col4 = st.columns(4)
 # col1.metric(
 #     "# Feedback", 
@@ -32,7 +58,7 @@ st.write("Time:", pd.to_datetime("today"))
 #     df["emotion"].nunique()
 # )
 
-# st.divider()
+st.divider()
 
 # Filter Button 
 
@@ -55,16 +81,22 @@ base_df = df[
     (df["date"].dt.date <= end_date)
 ]
 
+active_clusters = base_df["label"].unique()
+base_insights_df = insights_df[
+    insights_df["label"].isin(active_clusters)
+]
+
 issue = st.sidebar.selectbox(
     "Select Issue", 
-    ["All"] + sorted(base_df["label"].unique())
+    ["All"] + sorted(base_insights_df["label"].unique())
 )
 
 # Filtering Data Frame
 filtered_df = base_df.copy()
 if issue != "All":
+    cluster_id = base_insights_df[base_insights_df["label"] == issue].iloc[0]
     filtered_df = filtered_df[
-        filtered_df["label"] == issue]
+        filtered_df["cluster_id"] == cluster_id]
 
 # For the date slider
 latest_date = filtered_df["date"].max()
@@ -155,16 +187,10 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 sentiment_level = filtered_df["sentiment"].mode()[0]
 
-issue_rows = df[df["label"] == issue]
-
-if issue_rows.empty:
-    recommendation = "No recommendation available for this issue."
-else:
-    exact_match = issue_rows[issue_rows["sentiment"] == sentiment_level]
-    if not exact_match.empty:
-        recommendation = exact_match["recommendation"].iloc[0]
-    else:
-        recommendation = issue_rows["recommendation"].mode().iloc[0]
+if issue == "All":
+    recommendation = "Select issue to see recommendation"
+else: 
+    recommendation = insights_df.loc[insights_df["label"] == issue, "recommendation"].iloc[0]
 st.success(recommendation)
 
 st.divider()
