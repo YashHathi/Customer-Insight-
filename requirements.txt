@@ -3,3 +3,8 @@ pandas
 matplotlib
 plotly
 torch
+transformers
+sentence_transformers
+sklearn
+openai
+dotenv
