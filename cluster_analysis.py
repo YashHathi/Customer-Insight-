@@ -2,6 +2,7 @@ import pandas as pd
 from openai import OpenAI
 import re
 import json
+import streamlit as st
 
 def get_comments(df, cluster_id,n=5):
     filtered_df = df[df["cluster_id"] == cluster_id].head(n)
@@ -60,8 +61,10 @@ Return only a valid JSON object in the following format:
 
     return prompt
 
+client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
+
 def call_llm(prompt):
-    client = OpenAI()
+    
 
     response = client.responses.create(
     model="gpt-5.4-nano",
