@@ -1,5 +1,5 @@
 import pandas as pd
-load dotenv import load_dotenv
+from dotenv import load_dotenv
 from openai import OpenAI
 import re
 import json
