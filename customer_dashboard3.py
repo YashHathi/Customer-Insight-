@@ -37,12 +37,6 @@ if uploaded_files:
             st.session_state["df"] = df
             st.session_state["insights_df"] = insights_df
 
-# We will make a run analysis button which can allow for proper personalization
-if st.button("Run Analysis"):
-    with st.spinner("Running analysis..."):
-        df, insights_df = run_pipeline(upload_dir)
-        st.session_state["df"] = df
-        st.session_state["insights_df"] = insights_df
 
 if "df" not in st.session_state:
     st.stop()
