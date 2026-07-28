@@ -31,30 +31,11 @@ if st.button("Run Analysis"):
         st.session_state["df"] = df
         st.session_state["insights_df"] = insights_df
 
-if "df" in st.session_state:
-        st.session_state["df"] = df
-        st.session_state["insights_df"] = insights_df
+if "df" not in st.session_state:
+    st.stop()
 
-# # KPI Cards
-# col1,col2,col3,col4 = st.columns(4)
-# col1.metric(
-#     "# Feedback", 
-#      len(df))
-
-# col2.metric(
-#     "% Negativity",
-#     round((len(df[df.sentiment == "negative"]) / len(df)) * 100,2)
-# )
-
-# col3.metric(
-#     "Feedback Intents",
-#     df["label"].nunique()
-# )
-
-# col4.metric(
-#     "Emotions",
-#     df["emotion"].nunique()
-# )
+df = st.session_state["df"]
+insights_df = st.session_state["insights_df"]
 
 st.divider()
 
