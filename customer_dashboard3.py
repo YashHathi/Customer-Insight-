@@ -67,20 +67,20 @@ base_df = df[
     (df["date"].dt.date <= end_date)
 ]
 
-active_clusters = base_df["label"].unique()
+active_clusters = base_df["cluster_id"].unique()
 base_insights_df = insights_df[
-    insights_df["label"].isin(active_clusters)
+    insights_df["cluster_id"].isin(active_clusters)
 ]
 
 issue = st.sidebar.selectbox(
     "Select Issue", 
-    ["All"] + sorted(base_insights_df["label"].unique())
+    ["All"] + sorted(base_insights_df["cluster_id"].unique())
 )
 
 # Filtering Data Frame
 filtered_df = base_df.copy()
 if issue != "All":
-    cluster_id = base_insights_df[base_insights_df["label"] == issue].iloc[0]
+    cluster_id = base_insights_df[base_insights_df["cluster_id"] == issue].iloc[0]
     filtered_df = filtered_df[
         filtered_df["cluster_id"] == cluster_id]
 
