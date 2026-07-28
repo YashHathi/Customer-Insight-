@@ -5,6 +5,6 @@ plotly
 torch
 transformers
 sentence_transformers
-sklearn
+scikit-learn
 openai
 dotenv
