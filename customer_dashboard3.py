@@ -24,8 +24,6 @@ if uploaded_file:
 
         file_path = temp.name
 
-df = pd.read_csv(file_path)
-
 # We will make a run analysis button which can allow for proper personalization
 if st.button("Run Analysis"):
     with st.spinner("Running analysis..."):
