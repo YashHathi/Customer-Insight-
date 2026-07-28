@@ -9,7 +9,7 @@ st.title("Customer Insight Engine")
 st.write("Time:", pd.to_datetime("today"))
 
 # File Uploader Button
-st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
+uploaded_file = st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
 
 # This will give a file path for streamlit to read, as we are not hard coding for a specific file
 import tempfile
