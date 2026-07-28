@@ -3,31 +3,32 @@ import pandas as pd
 import matplotlib as plt
 import plotly.express as px
 from pipeline import run_pipeline
+from pathlib import Path
+import tempfile
 
 # Title
 st.title("Customer Insight Engine")
 st.write("Time:", pd.to_datetime("today"))
 
 # File Uploader Button
-uploaded_file = st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
+uploaded_files = st.file_uploader("Upload Customer Insight Data", accept_multiple_files = True)
 
-# This will give a file path for streamlit to read, as we are not hard coding for a specific file
-import tempfile
-if uploaded_file:
+# This will give a file path for streamlit to read, as we are not hard coding for a specific file(files)
+with tempfile.TemporaryDirectory() as temp_dir:
 
-    with tempfile.NamedTemporaryFile(
-        delete=False,
-        suffix=uploaded_file.name
-    ) as temp:
+    temp_path = Path(temp_dir)
 
-        temp.write(uploaded_file.getvalue())
+    for file in uploaded_files:
 
-        file_path = temp.name
+        save_path = temp_path / file.name
+
+        with open(save_path, "wb") as f:
+            f.write(file.getbuffer())
 
 # We will make a run analysis button which can allow for proper personalization
 if st.button("Run Analysis"):
     with st.spinner("Running analysis..."):
-        df, insights_df = run_pipeline(file_path)
+        df, insights_df = run_pipeline(temp_path)
         st.session_state["df"] = df
         st.session_state["insights_df"] = insights_df
 
