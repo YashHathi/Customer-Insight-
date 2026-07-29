@@ -6,7 +6,7 @@ import json
 import streamlit as st
 
 def get_comments(df, cluster_id):
-    comments = df.loc[df["cluster_id"] == cluster_id, "text"].tolist()
+    comments = df.loc[df["cluster_id"] == cluster_id, "text"]
     return comments.sample(n = min(15, len(comments)), random_state = 107).tolist()
 
 def dominant_sentiment(df, cluster_id):
