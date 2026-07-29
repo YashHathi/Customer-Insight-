@@ -174,7 +174,7 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 sentiment_level = filtered_df["sentiment"].mode()[0]
 
-if issue == "All":
+if df[df["issue"] == "All"].any():
     recommendation = "Select issue to see recommendation"
 else: 
     recommendation = insights_df.loc[insights_df["issue"] == issue, "recommendation"].iloc[0]
