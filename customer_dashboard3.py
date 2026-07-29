@@ -162,7 +162,7 @@ for _, row in samples.iterrows():
 
         st.markdown(f"**Customer Comment**")
 
-        st.write(row["raw_text"])
+        st.write(row["text"])
 
         col1, col2 = st.columns(2)
 
