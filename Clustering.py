@@ -8,3 +8,5 @@ def cluster(embeddings, df):
     df["cluster_id"] = clusters
     df = df[df["cluster_id"] != -1]
     return df
+
+print(df["cluster_id"].unique())

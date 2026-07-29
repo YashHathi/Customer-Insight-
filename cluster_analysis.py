@@ -5,10 +5,9 @@ import re
 import json
 import streamlit as st
 
-def get_comments(df, cluster_id,n=5):
-    filtered_df = df[df["cluster_id"] == cluster_id].head(n)
-    comments = filtered_df["text"].tolist()
-    return comments
+def get_comments(df, cluster_id):
+    comments = df.loc[df["cluster_id"] == cluster_id, "text"].tolist()
+    return comments.sample(n = min(15, len(comments)), random_state = 107).tolist()
 
 def dominant_sentiment(df, cluster_id):
     filtered_df = df[df["cluster_id"] == cluster_id]
@@ -23,44 +22,41 @@ def dominant_emotion(df, cluster_id):
     return dominant_emotion
 
 def build_prompt(comments, sentiment, emotion):
-    """
-    Build an LLM prompt for analyzing a customer feedback cluster.
-    """
-
-    comment_text = "\n".join(
-        f"- {comment}"
-        for comment in comments
-    )
 
     prompt = f"""
-You are a customer experience analyst.
+"You are a customer experience analyst preparing insights for retail business leaders. Your goal is to summarize customer concerns and recommend practical actions that improve the customer experience."
 
-Analyze the following group of customer feedback.
+A clustering algorithm has already grouped together customer feedback about the same issue.
 
-Customer Comments:
-{comment_text}
+Cluster Information:
+- Dominant Sentiment: {sentiment}
+- Dominant Emotion: {emotion}
 
-Overall Sentiment:
-{sentiment}
+Representative Customer Comments:
+"""
 
-Primary Emotion:
-{emotion}
+    for comment in comments:
+        prompt += f"- {comment}\n"
 
-Your tasks are:
+    prompt += """
 
-1. Give this customer issue a one word business-friendly name.
-2. Write a 1-2 sentence summary describing the main customer concern.
-3. Recommend one practical action the business should take.
+Based only on the information above, return a JSON object with the following structure:
 
-Return only a valid JSON object in the following format:
-{{
-    "issue": "one word business-friendly name",
-    "summary": "1-2 sentence summary",
-    "recommendation": "one practical business action"
-}}
+{
+    "issue": "",
+    "summary": "",
+    "recommendation": ""
+}
+
+Requirements:
+- "issue" should be a concise business-friendly label (2-5 words).
+- "summary" should explain the common customer concern in 1-2 sentences.
+- "recommendation" should provide one actionable recommendation for a business stakeholder.
+- Return only valid JSON.
 """
 
     return prompt
+
 load_dotenv()
 client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
 
