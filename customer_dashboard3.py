@@ -81,6 +81,7 @@ issue = st.sidebar.selectbox(
 filtered_df = base_df.copy()
 if issue != "All":
     issue = base_insights_df[base_insights_df["issue"] == issue].iloc[0]
+    cluster_id = issue["cluster_id"]
     filtered_df = filtered_df[
         filtered_df["cluster_id"] == cluster_id]
 
