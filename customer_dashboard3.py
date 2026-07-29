@@ -74,13 +74,13 @@ base_insights_df = insights_df[
 
 issue = st.sidebar.selectbox(
     "Select Issue", 
-    ["All"] + sorted(base_insights_df["cluster_id"].unique())
+    ["All"] + sorted(base_insights_df["issue"].unique())
 )
 
 # Filtering Data Frame
 filtered_df = base_df.copy()
 if issue != "All":
-    cluster_id = base_insights_df[base_insights_df["cluster_id"] == issue].iloc[0]
+    issue = base_insights_df[base_insights_df["issue"] == issue].iloc[0]
     filtered_df = filtered_df[
         filtered_df["cluster_id"] == cluster_id]
 
