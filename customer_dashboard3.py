@@ -181,64 +181,64 @@ st.success(recommendation)
 
 st.divider()
 
-# Charts
+# # Charts
 
-# Feedback Distribution channels
-feedback_counts = df.groupby(["label", "channel"]).size().reset_index(name = "Count")
-chart1 = px.bar(feedback_counts, x = "label", y = "Count", color = "channel", barmode="stack", title = "Feedback Distribution by Issue and Channel")
-st.plotly_chart(chart1)
+# # Feedback Distribution channels
+# feedback_counts = df.groupby(["label", "channel"]).size().reset_index(name = "Count")
+# chart1 = px.bar(feedback_counts, x = "label", y = "Count", color = "channel", barmode="stack", title = "Feedback Distribution by Issue and Channel")
+# st.plotly_chart(chart1)
 
 
-sentiment_counts = df.groupby(["label", "sentiment"]).size().reset_index(name = "Count")
-chart2 = px.bar(sentiment_counts, x = "label", y = "Count", color = "sentiment", barmode="stack", title = "Sentiment Distribution by Issue")
-st.plotly_chart(chart2)
+# sentiment_counts = df.groupby(["label", "sentiment"]).size().reset_index(name = "Count")
+# chart2 = px.bar(sentiment_counts, x = "label", y = "Count", color = "sentiment", barmode="stack", title = "Sentiment Distribution by Issue")
+# st.plotly_chart(chart2)
 
-# Priority Matrix
+# # Priority Matrix
 
-priority = df.groupby("label").agg(volume = ("label", "size"), negativity = ("sentiment", lambda x: (x == "negative").mean())).reset_index()
-chart3 = px.scatter(priority, x = "volume", y = "negativity", size = "volume", text = "label", title = "Priority Matrix: Volume vs Negativity")
-chart3.update_traces(textposition = "top center")
-st.plotly_chart(chart3)
+# priority = df.groupby("label").agg(volume = ("label", "size"), negativity = ("sentiment", lambda x: (x == "negative").mean())).reset_index()
+# chart3 = px.scatter(priority, x = "volume", y = "negativity", size = "volume", text = "label", title = "Priority Matrix: Volume vs Negativity")
+# chart3.update_traces(textposition = "top center")
+# st.plotly_chart(chart3)
 
-st.divider()
+# st.divider()
 
-# Trend Chart
+# # Trend Chart
 
-sentiment_filter = st.selectbox(
-    "Trend Sentiment",
-    ["All"] + sorted(df["sentiment"].unique())
-)
+# sentiment_filter = st.selectbox(
+#     "Trend Sentiment",
+#     ["All"] + sorted(df["sentiment"].unique())
+# )
 
-trend_df = filtered_df.copy()
+# trend_df = filtered_df.copy()
 
-if sentiment_filter != "All":
-    trend_df = trend_df[
-        trend_df["sentiment"] == sentiment_filter
-    ]
+# if sentiment_filter != "All":
+#     trend_df = trend_df[
+#         trend_df["sentiment"] == sentiment_filter
+#     ]
 
-trend = (
-    trend_df
-    .groupby(
-        [
-            filtered_df["date"].dt.date,
-            "label"
-        ]
-    )
-    .size()
-    .reset_index(name="Count")
-)
+# trend = (
+#     trend_df
+#     .groupby(
+#         [
+#             filtered_df["date"].dt.date,
+#             "label"
+#         ]
+#     )
+#     .size()
+#     .reset_index(name="Count")
+# )
 
-fig = px.line(
-    trend,
-    x="date",
-    y="Count",
-    color="label",
-    markers=True,
-    title="Customer Issue Trends Over Time"
-)
+# fig = px.line(
+#     trend,
+#     x="date",
+#     y="Count",
+#     color="label",
+#     markers=True,
+#     title="Customer Issue Trends Over Time"
+# )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
+# st.plotly_chart(
+#     fig,
+#     use_container_width=True
+# )
 
