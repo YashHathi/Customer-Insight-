@@ -174,6 +174,9 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 sentiment_level = filtered_df["sentiment"].mode()[0]
 
+st.write(type(issue))
+st.write(issue)
+
 if issue == "All":
     recommendation = "Select issue to see recommendation"
 else: 
