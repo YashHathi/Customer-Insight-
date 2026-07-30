@@ -174,10 +174,10 @@ for _, row in samples.iterrows():
 st.subheader("Recommendation")
 sentiment_level = filtered_df["sentiment"].mode()[0]
 
-if df[df["issue"] == "All"].any():
+if issue == "All":
     recommendation = "Select issue to see recommendation"
 else: 
-    recommendation = insights_df.loc[insights_df["issue"] == issue, "recommendation"].iloc[0]
+    recommendation = base_insights_df.loc[base_insights_df["issue"] == issue, "recommendation"].iloc[0]
 st.success(recommendation)
 
 st.divider()
